@@ -36,7 +36,17 @@ class="banner">
 <span id="close">×</span>
 
 <img id="lightbox-img">
-
+<img
+  src="${photo.image}"
+  loading="lazy"
+  onclick="showImage('${photo.full}')">
+  <a
+  class="download"
+  href="${photo.download}"
+  download>
+  Download
+</a>
+  
 </div>
 
 <script src="script.js"></script>
