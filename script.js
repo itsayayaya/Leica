@@ -1,10 +1,10 @@
 const API_URL =
-"https://script.google.com/macros/s/AKfycbwO8YJ94G_wSQWn68Kq4vZzS6iklEIMiCV2O5kXQRMp7SLiZhce3QEHdRp1jdApEZ5B4A/exec";
+"https://script.google.com/macros/s/AKfycbxA6EdGket65sAFpiQC1T2GecZBGQK-g8pyJsRuidM3KUm9ez4u4dQ5oVKbsKhit4K8cw/exec";
 
 async function loadGallery(){
 
 const response =
-await fetch(API_URL);
+await fetch(https://script.google.com/macros/s/AKfycbxA6EdGket65sAFpiQC1T2GecZBGQK-g8pyJsRuidM3KUm9ez4u4dQ5oVKbsKhit4K8cw/exec);
 
 const data =
 await response.json();
