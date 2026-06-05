@@ -1,27 +1,27 @@
-async function loadImages() {
+function doGet() {
 
-    const response = await fetch(
-        'images.json?t=' + Date.now()
-    );
+  const folderId = "YOUR_FOLDER_ID";
 
-    const images = await response.json();
+  const folder = DriveApp.getFolderById(folderId);
 
-    const gallery =
-        document.getElementById('gallery');
+  const files = folder.getFiles();
 
-    gallery.innerHTML = '';
+  const images = [];
 
-    images.reverse().forEach(url => {
+  while(files.hasNext()){
 
-        const img =
-            document.createElement('img');
+    const file = files.next();
 
-        img.src = url;
-
-        gallery.appendChild(img);
+    images.push({
+      name: file.getName(),
+      url: `https://drive.google.com/thumbnail?id=${file.getId()}&sz=w2000`,
+      download: `https://drive.google.com/uc?export=download&id=${file.getId()}`
     });
+
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify(images))
+    .setMimeType(ContentService.MimeType.JSON);
+
 }
-
-loadImages();
-
-setInterval(loadImages, 5000);
