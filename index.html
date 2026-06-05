@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1">
-
-<title>Gallery</title>
+<title>Leica Gallery</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -30,23 +26,8 @@ content="width=device-width, initial-scale=1">
 <div id="gallery"></div>
 
 <div id="lightbox">
-  <img id="lightbox-img">
-</div>
-
-<span id="close">×</span>
-
-<img id="lightbox-img">
-<img
-  src="${photo.image}"
-  loading="lazy"
-  onclick="showImage('${photo.full}')">
-  <a
-  class="download"
-  href="${photo.download}"
-  download>
-  Download
-</a>
-  
+    <span id="close">×</span>
+    <img id="lightbox-img">
 </div>
 
 <script src="script.js"></script>
