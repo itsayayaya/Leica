@@ -1,63 +1,64 @@
 const API_URL =
 "https://script.google.com/macros/s/AKfycby5AV0l_gZW1LGllAgLdb0FIKjudc4l6Rw0xxpv07VEOo-0v5UsfU85wPs5_CKOqxE0CQ/exec";
 
-async function loadGallery(){
+async function loadGallery() {
 
-const response = await fetch(API_URL);
+  try {
 
-const data =
-await response.json();
+    const response = await fetch(API_URL);
+    const data = await response.json();
 
-document.getElementById("count")
-.innerText =
-`${data.count} Photos`;
+    document.getElementById("count").innerText =
+      `${data.count} Photos`;
 
-const gallery =
-document.getElementById("gallery");
+    const gallery =
+      document.getElementById("gallery");
 
-gallery.innerHTML += `
-<img src="${photo.image}">
-`;
-  
-data.images.forEach(photo=>{
+    gallery.innerHTML = "";
 
-gallery.innerHTML += `
+    data.images.forEach(photo => {
 
-<div class="card">
+      gallery.innerHTML += `
+        <div class="card">
 
-<img
-src="${photo.image}"
-onclick="showImage('${photo.image}')">
+          <img
+            src="${photo.image}"
+            loading="lazy"
+            onclick="showImage('${photo.full}')">
 
-<a
-class="download"
-href="${photo.download}">
-Download
-</a>
+          <a
+            class="download"
+            href="${photo.download}"
+            target="_blank">
+            Download
+          </a>
 
-</div>
+        </div>
+      `;
 
-`;
+    });
 
-});
+  } catch (err) {
 
+    console.error(err);
+
+  }
 }
 
-function showImage(url){
+function showImage(url) {
 
-document.getElementById("lightbox")
-.style.display="flex";
+  document.getElementById("lightbox")
+    .style.display = "flex";
 
-document.getElementById("lightbox-img")
-.src=url;
+  document.getElementById("lightbox-img")
+    .src = url;
 }
 
 document.getElementById("close")
-.onclick=()=>{
+  .onclick = () => {
 
-document.getElementById("lightbox")
-.style.display="none";
-
+    document.getElementById("lightbox")
+      .style.display = "none";
 };
 
 loadGallery();
