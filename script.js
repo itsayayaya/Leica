@@ -61,4 +61,4 @@ document.getElementById("lightbox")
 
 loadGallery();
 
-setInterval(loadGallery,60000);
+setInterval(loadGallery, 30000);
