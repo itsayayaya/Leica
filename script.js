@@ -15,8 +15,10 @@ document.getElementById("count")
 const gallery =
 document.getElementById("gallery");
 
-gallery.innerHTML = "";
-
+gallery.innerHTML += `
+<img src="${photo.image}">
+`;
+  
 data.images.forEach(photo=>{
 
 gallery.innerHTML += `
