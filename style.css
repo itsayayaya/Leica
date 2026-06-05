@@ -34,15 +34,6 @@ display:block;
 }
 
 .card{
-
-background:#111;
-
-border-radius:12px;
-
-overflow:hidden;
-}
-
-.card{
     position:relative;
     overflow:hidden;
 }
