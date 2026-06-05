@@ -1,5 +1,5 @@
 const API_URL =
-"https://script.google.com/macros/s/AKfycbz4LsoHmCPvvgEk5MdL9Ez-lPCElHUHTzf8Nx-jcJvKW1oiOv5T3eJ_5rxW3UE2GqSrYw/exec";
+"https://script.google.com/macros/s/AKfycbwO8YJ94G_wSQWn68Kq4vZzS6iklEIMiCV2O5kXQRMp7SLiZhce3QEHdRp1jdApEZ5B4A/exec";
 
 async function loadGallery(){
 
