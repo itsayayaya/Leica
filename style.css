@@ -1,0 +1,54 @@
+body{
+    margin:0;
+    background:#000;
+    color:#fff;
+    font-family:Arial,sans-serif;
+}
+
+.header{
+    text-align:center;
+    padding:20px;
+}
+
+.banner{
+    max-width:900px;
+    width:90%;
+    border-radius:15px;
+}
+
+.title{
+    margin-top:20px;
+    font-size:32px;
+}
+
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:15px;
+    padding:20px;
+}
+
+.card{
+    background:#111;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.card img{
+    width:100%;
+    display:block;
+}
+
+.download-btn{
+    display:block;
+    text-align:center;
+    padding:12px;
+    background:#fff;
+    color:#000;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.download-btn:hover{
+    opacity:.85;
+}
