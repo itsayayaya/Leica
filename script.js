@@ -1,27 +1,64 @@
-function doGet() {
+const API_URL =
+"https://script.google.com/macros/s/AKfycbz4LsoHmCPvvgEk5MdL9Ez-lPCElHUHTzf8Nx-jcJvKW1oiOv5T3eJ_5rxW3UE2GqSrYw/exec";
 
-  const folderId = "YOUR_FOLDER_ID";
+async function loadGallery(){
 
-  const folder = DriveApp.getFolderById(folderId);
+const response =
+await fetch(API_URL);
 
-  const files = folder.getFiles();
+const data =
+await response.json();
 
-  const images = [];
+document.getElementById("count")
+.innerText =
+`${data.count} Photos`;
 
-  while(files.hasNext()){
+const gallery =
+document.getElementById("gallery");
 
-    const file = files.next();
+gallery.innerHTML = "";
 
-    images.push({
-      name: file.getName(),
-      url: `https://drive.google.com/thumbnail?id=${file.getId()}&sz=w2000`,
-      download: `https://drive.google.com/uc?export=download&id=${file.getId()}`
-    });
+data.images.forEach(photo=>{
 
-  }
+gallery.innerHTML += `
 
-  return ContentService
-    .createTextOutput(JSON.stringify(images))
-    .setMimeType(ContentService.MimeType.JSON);
+<div class="card">
+
+<img
+src="${photo.image}"
+onclick="showImage('${photo.image}')">
+
+<a
+class="download"
+href="${photo.download}">
+Download
+</a>
+
+</div>
+
+`;
+
+});
 
 }
+
+function showImage(url){
+
+document.getElementById("lightbox")
+.style.display="flex";
+
+document.getElementById("lightbox-img")
+.src=url;
+}
+
+document.getElementById("close")
+.onclick=()=>{
+
+document.getElementById("lightbox")
+.style.display="none";
+
+};
+
+loadGallery();
+
+setInterval(loadGallery,60000);
