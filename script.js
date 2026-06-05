@@ -1,10 +1,9 @@
 const API_URL =
-"https://script.google.com/macros/s/AKfycbwEB5ZYRINbX5jozuT_wRjhwKjJ4wscC5llwZQ4vpaQomHkYgrS7_i3IkxegFVhSdhw7Q/exec";
+"https://script.google.com/macros/s/AKfycby5AV0l_gZW1LGllAgLdb0FIKjudc4l6Rw0xxpv07VEOo-0v5UsfU85wPs5_CKOqxE0CQ/exec";
 
 async function loadGallery(){
 
-const response =
-await fetch(folderId);
+const response = await fetch(API_URL);
 
 const data =
 await response.json();
