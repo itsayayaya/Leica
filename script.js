@@ -14,27 +14,19 @@ async function loadGallery() {
     const gallery =
       document.getElementById("gallery");
 
-    gallery.innerHTML = "";
+gallery.innerHTML += `
+<div class="card">
+  <img
+    src="${photo.image}"
+    onclick="showImage('${photo.full}')">
 
-    data.images.forEach(photo => {
-
-      gallery.innerHTML += `
-        <div class="card">
-
-          <img
-            src="${photo.image}"
-            loading="lazy"
-            onclick="showImage('${photo.full}')">
-
-          <a
-            class="download"
-            href="${photo.download}"
-            target="_blank">
-            Download
-          </a>
-
-        </div>
-      `;
+  <a
+    class="download"
+    href="${photo.download}">
+    Download
+  </a>
+</div>
+`;
 
     });
 
