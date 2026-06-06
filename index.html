@@ -9,167 +9,159 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #080808;
-      --surface: #111111;
-      --border: rgba(255,255,255,0.07);
-      --text: #e8e0d5;
-      --muted: rgba(232,224,213,0.45);
-      --accent: #c9a86c;
+      --bg: #080808; --surface: #111111;
+      --border: rgba(255,255,255,0.07); --text: #e8e0d5;
+      --muted: rgba(232,224,213,0.45); --accent: #c9a86c;
       --accent-dim: rgba(201,168,108,0.15);
     }
     body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; }
 
-    header { padding: 3rem 2rem 2rem; text-align: center; border-bottom: 1px solid var(--border); }
+    header { padding: 2.5rem 2rem 1.5rem; text-align: center; border-bottom: 1px solid var(--border); }
     header h1 {
       font-family: 'Cormorant Garamond', serif; font-weight: 300;
-      font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: 0.18em;
+      font-size: clamp(1.8rem, 5vw, 3.5rem); letter-spacing: 0.18em;
       color: var(--accent); text-transform: uppercase;
     }
-    header p { margin-top: 0.5rem; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.2em; }
+    header p { margin-top: 0.4rem; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.2em; }
 
     /* ── Tabs ── */
     #tabs-wrapper {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1.5rem 2rem 0;
-      display: none;
+      max-width: 1200px; margin: 0 auto;
+      padding: 1.2rem 1rem 0;
+      display: none; overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
-    #tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+    #tabs-wrapper::-webkit-scrollbar { display: none; }
+    #tabs { display: flex; gap: 6px; width: max-content; padding-bottom: 2px; }
     .tab-btn {
-      padding: 0.45rem 1rem;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      cursor: pointer;
-      border-radius: 2px;
-      transition: all 0.2s;
-      white-space: nowrap;
+      padding: 0.4rem 0.9rem;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--muted); font-family: 'DM Mono', monospace;
+      font-size: 0.68rem; letter-spacing: 0.1em;
+      cursor: pointer; border-radius: 2px; transition: all 0.2s;
+      white-space: nowrap; -webkit-tap-highlight-color: transparent;
     }
     .tab-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-    .tab-btn.active {
-      background: var(--accent-dim);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
+    .tab-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
 
     #status { text-align: center; font-size: 0.75rem; color: var(--muted); padding: 3rem 2rem; letter-spacing: 0.1em; }
 
     #gallery {
-      max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem 2rem;
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      max-width: 1200px; margin: 0 auto; padding: 1.2rem 1rem 2rem;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
     }
-    @media (max-width: 700px) { #gallery { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 460px) { #gallery { grid-template-columns: 1fr; } }
+    @media (min-width: 900px) { #gallery { gap: 10px; } }
 
     .photo-card {
       position: relative; aspect-ratio: 1; overflow: hidden;
-      cursor: pointer; border: 1px solid var(--border); border-radius: 2px; background: var(--surface);
+      cursor: pointer; border-radius: 2px; background: var(--surface);
     }
-    .photo-card img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-      transition: transform 0.4s ease, filter 0.4s ease; filter: brightness(0.85);
+    /* ใช้ background-image แทน <img> เพื่อ lazy-load ที่เร็วกว่าบนมือถือ */
+    .photo-card .thumb {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transition: transform 0.4s ease, filter 0.4s ease;
+      filter: brightness(0.88);
     }
-    .photo-card:hover img { transform: scale(1.04); filter: brightness(1); }
+    .photo-card:hover .thumb, .photo-card:active .thumb {
+      transform: scale(1.04); filter: brightness(1);
+    }
     .photo-card .overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 55%);
-      opacity: 0; transition: opacity 0.3s;
-      display: flex; align-items: flex-end; padding: 0.75rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 52%);
+      opacity: 0; transition: opacity 0.25s;
+      display: flex; align-items: flex-end; padding: 0.6rem;
     }
-    .photo-card:hover .overlay { opacity: 1; }
-    .photo-card .overlay span { font-size: 0.7rem; color: var(--text); letter-spacing: 0.1em; }
-    .photo-card .zoom-icon {
-      position: absolute; top: 8px; right: 8px;
-      width: 28px; height: 28px; background: rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.15); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; transition: opacity 0.3s;
-    }
-    .photo-card:hover .zoom-icon { opacity: 1; }
-    .zoom-icon svg { width: 14px; height: 14px; stroke: #fff; fill: none; }
+    .photo-card:hover .overlay, .photo-card:active .overlay { opacity: 1; }
+    .photo-card .overlay span { font-size: 0.62rem; color: var(--text); letter-spacing: 0.08em; line-height: 1.3; }
 
     /* ── Lightbox ── */
     #lightbox {
       position: fixed; inset: 0; background: rgba(0,0,0,0.97);
-      z-index: 1000; display: none; align-items: center; justify-content: center;
-      padding: 1rem; flex-direction: column;
+      z-index: 1000; display: none;
+      flex-direction: column; align-items: center; justify-content: center;
     }
     #lightbox.active { display: flex; }
 
     #lb-img-wrap {
-      flex: 1;
-      display: flex; align-items: center; justify-content: center;
-      width: 100%; overflow: hidden;
-      position: relative;
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      width: 100%; position: relative; overflow: hidden;
+      touch-action: pan-y;
     }
     #lightbox-img {
-      max-width: 88vw; max-height: 80vh;
+      max-width: 92vw; max-height: 78vh;
       object-fit: contain; display: block;
-      border: 1px solid var(--border);
-      transition: opacity 0.2s;
+      transition: opacity 0.18s;
     }
     #lb-spinner {
-      position: absolute;
-      width: 32px; height: 32px;
-      border: 2px solid rgba(255,255,255,0.1);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      display: none;
+      position: absolute; width: 30px; height: 30px;
+      border: 2px solid rgba(255,255,255,0.08);
+      border-top-color: var(--accent); border-radius: 50%;
+      animation: spin 0.7s linear infinite; display: none;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .lb-nav {
       position: absolute; top: 50%; transform: translateY(-50%);
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-      color: var(--text); width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text); width: 42px; height: 42px; border-radius: 50%;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
       transition: background 0.2s; z-index: 10;
+      -webkit-tap-highlight-color: transparent;
     }
-    .lb-nav:hover { background: rgba(255,255,255,0.14); }
-    .lb-nav svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
-    #lb-prev { left: 0.5rem; }
-    #lb-next { right: 0.5rem; }
+    .lb-nav:hover { background: rgba(255,255,255,0.16); }
+    .lb-nav svg { width: 18px; height: 18px; stroke: currentColor; fill: none; }
+    #lb-prev { left: 0.4rem; }
+    #lb-next { right: 0.4rem; }
 
     #lb-close {
-      position: absolute; top: 1rem; left: 1rem;
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      position: absolute; top: 0.8rem; left: 0.8rem;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
       color: var(--text); width: 36px; height: 36px; border-radius: 50%;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem; transition: background 0.2s; z-index: 20;
+      font-size: 1.1rem; z-index: 20; -webkit-tap-highlight-color: transparent;
     }
-    #lb-close:hover { background: rgba(255,255,255,0.14); }
 
     #lb-bottom {
       width: 100%; display: flex; align-items: center; justify-content: space-between;
-      padding: 0.8rem 1rem 0.2rem;
+      padding: 0.7rem 1rem 1rem;
+      gap: 0.5rem;
     }
-    #lb-caption { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.12em; }
+    #lb-caption { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* Download — iOS-aware */
     #lb-download {
       background: var(--accent); color: #080808; border: none;
-      padding: 0.55rem 1.1rem; font-family: 'DM Mono', monospace;
-      font-size: 0.7rem; letter-spacing: 0.15em; cursor: pointer;
-      border-radius: 2px; display: flex; align-items: center; gap: 0.45rem;
-      text-decoration: none; font-weight: 500; transition: opacity 0.2s;
+      padding: 0.6rem 1.1rem; font-family: 'DM Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.12em; cursor: pointer;
+      border-radius: 2px; display: flex; align-items: center; gap: 0.4rem;
+      text-decoration: none; font-weight: 500; flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s;
     }
-    #lb-download:hover { opacity: 0.85; }
-    #lb-download svg { width: 15px; height: 15px; stroke: currentColor; fill: none; }
+    #lb-download:active { opacity: 0.75; }
+    #lb-download svg { width: 14px; height: 14px; stroke: currentColor; fill: none; }
 
-    footer { text-align: center; padding: 3rem 2rem; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; border-top: 1px solid var(--border); margin-top: 2rem; }
+    /* iOS save hint toast */
+    #ios-hint {
+      position: fixed; bottom: 5rem; left: 50%; transform: translateX(-50%);
+      background: rgba(30,30,30,0.95); border: 1px solid var(--border);
+      color: var(--text); font-size: 0.68rem; letter-spacing: 0.08em;
+      padding: 0.6rem 1.2rem; border-radius: 4px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+      white-space: nowrap; z-index: 2000;
+    }
+    #ios-hint.show { opacity: 1; }
+
+    footer { text-align: center; padding: 2.5rem 2rem; font-size: 0.62rem; color: var(--muted); letter-spacing: 0.15em; border-top: 1px solid var(--border); margin-top: 1rem; }
   </style>
 </head>
 <body>
 
 <header>
   <h1>Gallery</h1>
-  <p id="header-subtitle">Leica · Photo Collection</p>
+  <p id="header-subtitle">Google Drive · Photo Collection</p>
 </header>
 
 <div id="tabs-wrapper"><div id="tabs"></div></div>
@@ -190,12 +182,14 @@
   </div>
   <div id="lb-bottom">
     <span id="lb-caption"></span>
-    <a id="lb-download" href="#" target="_blank">
+    <a id="lb-download" href="#" onclick="handleDownload(event)">
       <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      ดาวน์โหลด
+      บันทึกภาพ
     </a>
   </div>
 </div>
+
+<div id="ios-hint">กด "บันทึกภาพ" ค้างไว้ → เลือก "บันทึกไปยังรูปภาพ"</div>
 
 <footer>PHOTO GALLERY · GOOGLE DRIVE · <span id="photo-count"></span></footer>
 
@@ -203,12 +197,10 @@
   const FOLDER_ID = '1etO0sMe19Oc-AfN3E9e-3-tLm2yYiuZS';
   const API_KEY   = 'AIzaSyD1xK5oJlAVpvRpqo3xlDkfpTbt1wwuAQA';
 
-  let allPhotos = [];   // ทุกรูป
-  let photos    = [];   // รูปที่แสดงอยู่ใน tab ปัจจุบัน
-  let currentIndex = 0;
-  let activeDay = 'all';
+  const isIOS = /iP(hone|od|ad)/.test(navigator.userAgent);
 
-  // แปลง modifiedTime → "D/M/YYYY"
+  let allPhotos = [], photos = [], currentIndex = 0, activeDay = null;
+
   function toDateLabel(isoStr) {
     if (!isoStr) return 'ไม่ทราบวันที่';
     const d = new Date(isoStr);
@@ -216,14 +208,13 @@
   }
 
   async function loadGallery() {
-    const status = document.getElementById('status');
     allPhotos = [];
     try {
       let pageToken = '';
       do {
         const url = `https://www.googleapis.com/drive/v3/files`
           + `?q='${FOLDER_ID}'+in+parents+and+mimeType+contains+'image/'`
-          + `&fields=nextPageToken,files(id,name,createdTime,modifiedTime)`
+          + `&fields=nextPageToken,files(id,name,createdTime)`
           + `&orderBy=createdTime+desc`
           + `&key=${API_KEY}&pageSize=100`
           + (pageToken ? `&pageToken=${pageToken}` : '');
@@ -234,76 +225,93 @@
         pageToken = data.nextPageToken || '';
       } while (pageToken);
 
-      status.style.display = 'none';
+      document.getElementById('status').style.display = 'none';
       document.getElementById('photo-count').textContent = `${allPhotos.length} ภาพ`;
       document.getElementById('header-subtitle').textContent = `Google Drive · ${allPhotos.length} ภาพ`;
 
       buildTabs();
-      showTab('all');
     } catch (err) {
-      status.textContent = `เกิดข้อผิดพลาด: ${err.message}`;
+      document.getElementById('status').textContent = `เกิดข้อผิดพลาด: ${err.message}`;
     }
   }
 
   function buildTabs() {
-    // รวบรวมวันที่ไม่ซ้ำ เรียงจากใหม่ไปเก่า
-    const daySet = new Set();
-    allPhotos.forEach(p => daySet.add(toDateLabel(p.createdTime || p.modifiedTime)));
-    const days = [...daySet]; // ยังเรียงอยู่เพราะ orderBy createdTime desc
+    // วันที่ไม่ซ้ำ เรียงใหม่→เก่า (API ส่งมาเรียงแล้ว)
+    const days = [...new Set(allPhotos.map(p => toDateLabel(p.createdTime)))];
 
     const tabsEl = document.getElementById('tabs');
     tabsEl.innerHTML = '';
 
-    // ปุ่ม "ทั้งหมด"
-    const allBtn = makeTabBtn('ทั้งหมด', 'all');
-    tabsEl.appendChild(allBtn);
-
-    days.forEach(day => {
-      tabsEl.appendChild(makeTabBtn(day, day));
-    });
+    // tab วันก่อน แล้วค่อย "ทั้งหมด" ไว้สุดท้าย
+    days.forEach(day => tabsEl.appendChild(makeTabBtn(day, day)));
+    tabsEl.appendChild(makeTabBtn('ทั้งหมด', 'all'));
 
     document.getElementById('tabs-wrapper').style.display = 'block';
+
+    // เลือก tab แรก (ล่าสุด) เป็น default
+    showTab(days[0] || 'all');
   }
 
   function makeTabBtn(label, key) {
     const btn = document.createElement('button');
-    btn.className = 'tab-btn' + (key === activeDay ? ' active' : '');
+    btn.className = 'tab-btn';
     btn.textContent = label;
+    btn.dataset.key = key;
     btn.onclick = () => showTab(key);
     return btn;
   }
 
   function showTab(key) {
     activeDay = key;
-    document.querySelectorAll('.tab-btn').forEach(b => {
-      b.classList.toggle('active', b.textContent === (key === 'all' ? 'ทั้งหมด' : key));
-    });
-    if (key === 'all') {
-      photos = allPhotos;
-    } else {
-      photos = allPhotos.filter(p => toDateLabel(p.createdTime || p.modifiedTime) === key);
-    }
+    document.querySelectorAll('.tab-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.key === key)
+    );
+    photos = key === 'all'
+      ? allPhotos
+      : allPhotos.filter(p => toDateLabel(p.createdTime) === key);
     renderGallery();
   }
 
   function renderGallery() {
     const gallery = document.getElementById('gallery');
     gallery.innerHTML = '';
+
     photos.forEach((photo, idx) => {
-      // ใช้ thumbnail API — ทำงานได้ข้าม origin โดยไม่ต้องการ CORS
-      const thumb = `https://drive.google.com/thumbnail?id=${photo.id}&sz=w600`;
+      // ใช้ sz=w400 สำหรับ grid thumbnail — โหลดเร็วบนมือถือ
+      const thumb = `https://drive.google.com/thumbnail?id=${photo.id}&sz=w400`;
       const card  = document.createElement('div');
       card.className = 'photo-card';
       card.onclick   = () => openLightbox(idx);
-      card.innerHTML = `
-        <img src="${thumb}" alt="${photo.name}" loading="lazy" />
-        <div class="overlay"><span>${photo.name}</span></div>
-        <div class="zoom-icon">
-          <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </div>`;
+
+      const div = document.createElement('div');
+      div.className = 'thumb';
+
+      // Intersection Observer: โหลดรูปเฉพาะที่กำลังจะเข้าหน้าจอ
+      observer.observe({ el: div, src: thumb });
+
+      card.innerHTML = `<div class="overlay"><span>${photo.name}</span></div>`;
+      card.insertBefore(div, card.firstChild);
       gallery.appendChild(card);
     });
   }
+
+  // ── Lazy-load observer ──
+  const observer = (() => {
+    const pending = new WeakMap();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const src = pending.get(e.target);
+          if (src) { e.target.style.backgroundImage = `url(${src})`; pending.delete(e.target); }
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '200px' });
+
+    return {
+      observe({ el, src }) { pending.set(el, src); io.observe(el); }
+    };
+  })();
 
   // ── Lightbox ──
   function openLightbox(idx) {
@@ -321,42 +329,63 @@
     updateLightbox();
   }
   function updateLightbox() {
-    const p = photos[currentIndex];
+    const p   = photos[currentIndex];
     const img = document.getElementById('lightbox-img');
-    const spinner = document.getElementById('lb-spinner');
-
-    // แสดง spinner ระหว่างโหลด
+    const sp  = document.getElementById('lb-spinner');
     img.style.opacity = '0';
-    spinner.style.display = 'block';
+    sp.style.display  = 'block';
 
-    // ใช้ thumbnail ขนาดใหญ่ (w=2000) แทน /uc?export=view ที่ถูกบล็อก
-    const src = `https://drive.google.com/thumbnail?id=${p.id}&sz=w2000`;
-    img.onload = () => {
-      spinner.style.display = 'none';
-      img.style.opacity = '1';
-    };
-    img.onerror = () => {
-      spinner.style.display = 'none';
-      img.style.opacity = '1';
-    };
-    img.src = src;
+    // sz=w1600 — ชัดพอดู ไม่หนักเกิน
+    img.onload = img.onerror = () => { sp.style.display='none'; img.style.opacity='1'; };
+    img.src = `https://drive.google.com/thumbnail?id=${p.id}&sz=w1600`;
 
     document.getElementById('lb-caption').textContent =
-      `${currentIndex + 1} / ${photos.length}  ·  ${p.name}`;
+      `${currentIndex+1} / ${photos.length}  ·  ${p.name}`;
 
-    // ปุ่มดาวน์โหลด — ชี้ไปที่ Google Drive file page (เปิด tab ใหม่)
+    // ปุ่มดาวน์โหลด — ใช้ thumbnail ตัวเต็มเพื่อให้ iOS เปิดได้ในแอปรูปภาพ
     document.getElementById('lb-download').href =
-      `https://drive.google.com/uc?export=download&id=${p.id}`;
+      `https://drive.google.com/thumbnail?id=${p.id}&sz=w4096`;
+    document.getElementById('lb-download').download = p.name;
   }
+
+  function handleDownload(e) {
+    if (isIOS) {
+      // iOS Safari ไม่รองรับ download attribute → เปิด tab ใหม่ให้ user กด long-press บันทึก
+      e.preventDefault();
+      const p   = photos[currentIndex];
+      const url = `https://drive.google.com/thumbnail?id=${p.id}&sz=w4096`;
+      window.open(url, '_blank');
+      showIosHint();
+    }
+    // Android / Desktop — ใช้ default href download
+  }
+
+  let hintTimer;
+  function showIosHint() {
+    const el = document.getElementById('ios-hint');
+    el.classList.add('show');
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(() => el.classList.remove('show'), 4000);
+  }
+
+  // swipe บนมือถือ
+  let touchStartX = 0;
+  document.getElementById('lb-img-wrap').addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  document.getElementById('lb-img-wrap').addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+  }, { passive: true });
 
   document.getElementById('lightbox').addEventListener('click', function(e) {
     if (e.target === this) closeLightbox();
   });
   document.addEventListener('keydown', e => {
     if (!document.getElementById('lightbox').classList.contains('active')) return;
-    if (e.key === 'Escape')      closeLightbox();
-    if (e.key === 'ArrowLeft')   navigate(-1);
-    if (e.key === 'ArrowRight')  navigate(1);
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowLeft')  navigate(-1);
+    if (e.key === 'ArrowRight') navigate(1);
   });
 
   loadGallery();
