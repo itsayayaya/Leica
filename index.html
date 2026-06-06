@@ -161,7 +161,7 @@
 
 <header>
   <h1>Gallery</h1>
-  <p id="header-subtitle">Google Drive · Photo Collection</p>
+  <p id="header-subtitle">Leica · Photo Collection</p>
 </header>
 
 <div id="tabs-wrapper"><div id="tabs"></div></div>
@@ -191,7 +191,7 @@
 
 <div id="ios-hint">กด "บันทึกภาพ" ค้างไว้ → เลือก "บันทึกไปยังรูปภาพ"</div>
 
-<footer>PHOTO GALLERY · GOOGLE DRIVE · <span id="photo-count"></span></footer>
+<footer>PHOTO GALLERY · Leica · <span id="photo-count"></span></footer>
 
 <script>
   const FOLDER_ID = '1etO0sMe19Oc-AfN3E9e-3-tLm2yYiuZS';
@@ -226,8 +226,8 @@
       } while (pageToken);
 
       document.getElementById('status').style.display = 'none';
-      document.getElementById('photo-count').textContent = `${allPhotos.length} ภาพ`;
-      document.getElementById('header-subtitle').textContent = `Google Drive · ${allPhotos.length} ภาพ`;
+      document.getElementById('photo-count').textContent = `${allPhotos.length} Pic`;
+      document.getElementById('header-subtitle').textContent = `Leica · ${allPhotos.length} Pic`;
 
       buildTabs();
     } catch (err) {
